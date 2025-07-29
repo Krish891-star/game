@@ -1,0 +1,2026 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Ghibli RPS Championship - Ultimate Sound Edition</title>
+    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700&family=Itim&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>✂️</text></svg>">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #a8d8ea, #aa96da, #fcbad3);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            color: #5d4037;
+            padding: 20px;
+            overflow: auto;
+            position: relative;
+            font-family: 'Comic Neue', cursive;
+            transition: background 0.5s ease, color 0.5s ease;
+        }
+
+        /* Dark Theme Styles */
+        body.dark-theme {
+            background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+            color: #e6e6e6;
+        }
+
+        body.dark-theme .container {
+            background: rgba(30, 30, 46, 0.95);
+            border: 3px solid rgba(255, 255, 255, 0.2);
+        }
+
+        body.dark-theme .mode-selection,
+        body.dark-theme .player-input,
+        body.dark-theme .championship-info,
+        body.dark-theme .score-box,
+        body.dark-theme .player-name,
+        body.dark-theme .credits,
+        body.dark-theme .privacy-policy {
+            background: rgba(50, 50, 80, 0.8);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            color: #e6e6e6;
+        }
+
+        body.dark-theme .mode-btn,
+        body.dark-theme .btn,
+        body.dark-theme .setting-btn {
+            background: rgba(70, 70, 100, 0.9);
+            color: #e6e6e6;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        body.dark-theme .choice {
+            background: rgba(60, 60, 90, 0.9);
+            border: 3px solid rgba(255, 255, 255, 0.3);
+        }
+
+        body.dark-theme .selection-icon {
+            background: rgba(60, 60, 90, 0.9);
+            border: 3px solid rgba(255, 255, 255, 0.3);
+        }
+
+        body.dark-theme .round-winner-content,
+        body.dark-theme .champion-content {
+            background: rgba(40, 40, 60, 0.95);
+            color: #e6e6e6;
+        }
+        
+        body.dark-theme .input-group input {
+            background: rgba(60, 60, 80, 0.9);
+            color: #ffffff;
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        body.dark-theme .input-group label,
+        body.dark-theme .mode-title,
+        body.dark-theme .info-box h3,
+        body.dark-theme .player-name,
+        body.dark-theme .score-box h3,
+        body.dark-theme .selection-box h3,
+        body.dark-theme .result-text,
+        body.dark-theme .footer {
+            color: #ffd166;
+        }
+        
+        /* Floating Ghibli elements */
+        .ghibli-element {
+            position: absolute;
+            z-index: 0;
+            opacity: 0.7;
+            animation: float 15s infinite ease-in-out;
+        }
+        
+        .cloud {
+            width: 150px;
+            height: 60px;
+            background: #ffffff;
+            border-radius: 75px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            filter: blur(1px);
+        }
+
+        body.dark-theme .cloud {
+            background: #2c3e50;
+        }
+        
+        .soot-sprite {
+            width: 35px;
+            height: 35px;
+            background: #333;
+            border-radius: 50%;
+            position: absolute;
+            animation: float 8s infinite ease-in-out;
+        }
+        
+        .soot-sprite:before, .soot-sprite:after {
+            content: '';
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #fff;
+            border-radius: 50%;
+            top: 8px;
+            left: 8px;
+        }
+        
+        .soot-sprite:after {
+            top: 8px;
+            left: 17px;
+        }
+        
+        .totoro {
+            width: 80px;
+            height: 100px;
+            background: #8d6e63;
+            border-radius: 50% 50% 40% 40%;
+            position: relative;
+        }
+        
+        .totoro:after {
+            content: '';
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            background: #fff;
+            border-radius: 50%;
+            top: 30px;
+            left: 15px;
+            box-shadow: 35px 0 #fff;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0) translateX(0) rotate(0deg); }
+            33% { transform: translateY(-20px) translateX(15px) rotate(5deg); }
+            66% { transform: translateY(10px) translateX(-15px) rotate(-5deg); }
+            100% { transform: translateY(0) translateX(0) rotate(0deg); }
+        }
+        
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1000px;
+            min-height: 90vh;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(10px);
+            border-radius: 25px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            padding: 30px;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+            border: 3px solid rgba(255, 255, 255, 0.6);
+            overflow: hidden;
+            margin: 20px 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .container:before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            background: linear-gradient(45deg, #ffeb3b, #e91e63, #3f51b5, #4caf50);
+            z-index: -1;
+            filter: blur(25px);
+            opacity: 0.2;
+            animation: borderGlow 8s infinite alternate;
+        }
+        
+        @keyframes borderGlow {
+            0% { opacity: 0.2; }
+            100% { opacity: 0.4; }
+        }
+        
+        .screen {
+            display: none;
+            animation: fadeIn 0.8s ease;
+            flex: 1;
+            width: 100%;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        #splash-screen {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 70vh;
+        }
+        
+        .splash-content {
+            animation: splashPulse 2s infinite alternate;
+        }
+        
+        @keyframes splashPulse {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.05); }
+        }
+        
+        .splash-title {
+            font-size: 4.5rem;
+            margin-bottom: 20px;
+            color: #7e57c2;
+            font-family: 'Itim', cursive;
+            text-shadow: 3px 3px 0 rgba(188, 204, 255, 0.5);
+        }
+        
+        .splash-subtitle {
+            font-size: 2.5rem;
+            color: #ff6b6b;
+            margin-bottom: 40px;
+            font-family: 'Itim', cursive;
+        }
+        
+        .splash-logo {
+            font-size: 8rem;
+            margin: 30px 0;
+            color: #ff6b6b;
+            animation: logoFloat 3s infinite ease-in-out;
+        }
+        
+        @keyframes logoFloat {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0); }
+        }
+        
+        .header {
+            margin-bottom: 30px;
+            position: relative;
+            padding: 20px 0;
+        }
+        
+        .header:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 20%;
+            width: 60%;
+            height: 4px;
+            background: linear-gradient(to right, transparent, #ff9a8b, #ff6a88, #ff99ac, transparent);
+            border-radius: 50%;
+            filter: blur(2px);
+        }
+        
+        h1 {
+            font-size: 3.5rem;
+            margin-bottom: 15px;
+            color: #7e57c2;
+            font-family: 'Itim', cursive;
+            text-shadow: 3px 3px 0 rgba(188, 204, 255, 0.5);
+        }
+        
+        .creator-text {
+            font-size: 2rem;
+            color: #ff6b6b;
+            margin-bottom: 30px;
+            font-family: 'Itim', cursive;
+        }
+        
+        .welcome-text {
+            font-size: 1.6rem;
+            color: #5d4037;
+            margin: 20px 0 40px;
+            font-family: 'Itim', cursive;
+            line-height: 1.6;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .ghibli-art {
+            font-size: 3.5rem;
+            margin: 25px 0;
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+        }
+        
+        .ghibli-art i {
+            color: #ff6b6b;
+            text-shadow: 3px 3px 0 rgba(255, 204, 188, 0.5);
+            animation: iconFloat 4s infinite ease-in-out;
+        }
+        
+        .ghibli-art i:nth-child(2) {
+            color: #4ecdc4;
+            animation-delay: 0.5s;
+        }
+        
+        .ghibli-art i:nth-child(3) {
+            color: #ffd166;
+            animation-delay: 1s;
+        }
+        
+        @keyframes iconFloat {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0); }
+        }
+        
+        .mode-selection {
+            margin: 40px 0;
+            padding: 25px;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            border: 2px solid rgba(255, 255, 255, 0.8);
+        }
+        
+        .mode-title {
+            font-size: 2rem;
+            margin-bottom: 25px;
+            color: #7e57c2;
+            font-family: 'Itim', cursive;
+        }
+        
+        .mode-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .mode-btn {
+            background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+            border: none;
+            padding: 18px 40px;
+            font-size: 1.4rem;
+            border-radius: 50px;
+            color: #5d4037;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            min-width: 280px;
+            position: relative;
+            overflow: hidden;
+            z-index: 2;
+            font-family: 'Comic Neue', cursive;
+            border: 2px solid rgba(255, 255, 255, 0.7);
+        }
+        
+        .mode-btn:hover {
+            transform: translateY(-7px);
+            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .player-input {
+            margin: 30px 0;
+            padding: 25px;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            max-width: 600px;
+            margin: 30px auto;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+        }
+        
+        .input-group {
+            margin: 25px 0;
+            text-align: left;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 12px;
+            color: #7e57c2;
+            font-size: 1.4rem;
+            font-family: 'Itim', cursive;
+        }
+        
+        .input-group input {
+            width: 100%;
+            padding: 16px 20px;
+            border-radius: 15px;
+            border: 2px solid rgba(126, 87, 194, 0.3);
+            background: rgba(255, 255, 255, 0.9);
+            color: #5d4037;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            font-family: 'Comic Neue', cursive;
+        }
+        
+        .input-group input:focus {
+            outline: none;
+            border-color: #ffd166;
+            box-shadow: 0 0 20px rgba(255, 209, 102, 0.4);
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+            border: none;
+            padding: 16px 45px;
+            font-size: 1.3rem;
+            border-radius: 50px;
+            color: #5d4037;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            position: relative;
+            z-index: 2;
+            font-family: 'Comic Neue', cursive;
+            border: 2px solid rgba(255, 255, 255, 0.7);
+            margin-top: 15px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .game-area {
+            width: 100%;
+        }
+        
+        .championship-info {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 30px;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 20px;
+            padding: 15px;
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+        }
+        
+        .info-box {
+            text-align: center;
+            padding: 10px 20px;
+        }
+        
+        .info-box h3 {
+            font-size: 1.4rem;
+            color: #7e57c2;
+            font-family: 'Itim', cursive;
+            margin-bottom: 5px;
+        }
+        
+        .info-value {
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: #ff6b6b;
+            font-family: 'Itim', cursive;
+        }
+        
+        .player-names {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 30px;
+            font-size: 1.8rem;
+            font-family: 'Itim', cursive;
+            color: #7e57c2;
+        }
+        
+        .player-name {
+            background: rgba(255, 255, 255, 0.7);
+            padding: 10px 30px;
+            border-radius: 50px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            border: 2px solid rgba(255, 255, 255, 0.8);
+        }
+        
+        .scores {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+        
+        .score-box {
+            background: linear-gradient(135deg, #a1c4fd, #c2e9fb);
+            border-radius: 20px;
+            padding: 25px 40px;
+            min-width: 200px;
+            box-shadow: 0 12px 25px rgba(0,0,0,0.1);
+            border: 2px solid rgba(255, 255, 255, 0.7);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .score-box h3 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            color: #5d4037;
+            font-family: 'Itim', cursive;
+        }
+        
+        .score-value {
+            font-size: 3.5rem;
+            font-weight: bold;
+            color: #ff6b6b;
+            font-family: 'Itim', cursive;
+        }
+        
+        .choices {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 40px 0;
+            flex-wrap: wrap;
+        }
+        
+        .choice {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 6rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.1);
+            border: 3px solid rgba(255, 255, 255, 0.9);
+            position: relative;
+            overflow: hidden;
+            animation: choiceFloat 5s infinite alternate;
+        }
+        
+        @keyframes choiceFloat {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-15px); }
+        }
+        
+        .choice:hover {
+            transform: scale(1.1) rotate(10deg);
+            animation: none;
+        }
+        
+        .choice.rock {
+            color: #ff6b6b;
+            background: linear-gradient(135deg, #ffecd2, #fcb69f);
+        }
+        
+        .choice.paper {
+            color: #4ecdc4;
+            background: linear-gradient(135deg, #a1c4fd, #c2e9fb);
+        }
+        
+        .choice.scissors {
+            color: #ffd166;
+            background: linear-gradient(135deg, #d4fc79, #96e6a1);
+        }
+        
+        .result-area {
+            margin: 30px 0;
+            min-height: 180px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            gap: 30px;
+        }
+        
+        .selections {
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+        }
+        
+        .selection-box {
+            text-align: center;
+            width: 200px;
+        }
+        
+        .selection-box h3 {
+            margin-bottom: 15px;
+            color: #7e57c2;
+            font-family: 'Itim', cursive;
+            font-size: 1.5rem;
+        }
+        
+        .selection-icon {
+            font-size: 5rem;
+            width: 140px;
+            height: 140px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            margin: 0 auto;
+            border: 3px solid rgba(255, 255, 255, 0.9);
+        }
+        
+        .player1-selection .selection-icon {
+            background: linear-gradient(135deg, #ffecd2, #fcb69f);
+        }
+        
+        .player2-selection .selection-icon {
+            background: linear-gradient(135deg, #a1c4fd, #c2e9fb);
+        }
+        
+        .result-text {
+            font-size: 3rem;
+            min-height: 70px;
+            margin-top: 20px;
+            font-weight: bold;
+            font-family: 'Itim', cursive;
+            color: #7e57c2;
+            animation: resultPulse 2s infinite alternate;
+        }
+        
+        @keyframes resultPulse {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.05); }
+        }
+        
+        .controls {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        /* Turn indicator */
+        .turn-indicator {
+            position: fixed;
+            top: 20px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            font-size: 2rem;
+            color: #ff6b6b;
+            font-family: 'Itim', cursive;
+            z-index: 100;
+            opacity: 0;
+            transform: translateY(-50px);
+            transition: all 0.5s ease;
+        }
+        
+        .turn-indicator.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .footer {
+            margin-top: 30px;
+            color: #7e57c2;
+            font-size: 1.2rem;
+            font-family: 'Itim', cursive;
+        }
+        
+        /* Round Winner Screen */
+        .round-winner {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            display: none;
+        }
+        
+        .round-winner-content {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 25px;
+            padding: 40px;
+            text-align: center;
+            max-width: 600px;
+            width: 90%;
+            box-shadow: 0 0 50px rgba(126, 87, 194, 0.3);
+            border: 3px solid #ffd166;
+        }
+        
+        .round-winner-content h2 {
+            font-size: 3rem;
+            color: #ff6b6b;
+            margin-bottom: 20px;
+            font-family: 'Itim', cursive;
+        }
+        
+        .round-winner-content p {
+            font-size: 1.8rem;
+            margin-bottom: 30px;
+            color: #7e57c2;
+            font-family: 'Itim', cursive;
+        }
+        
+        /* Settings */
+        .settings {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .setting-btn {
+            background: rgba(255, 255, 255, 0.7);
+            border: 2px solid rgba(126, 87, 194, 0.3);
+            border-radius: 50px;
+            padding: 10px 20px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .setting-btn:hover {
+            background: rgba(255, 255, 255, 0.9);
+            transform: translateY(-3px);
+        }
+        
+        /* Credits */
+        .credits {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+        }
+        
+        .credits h2 {
+            color: #ff6b6b;
+            margin-bottom: 20px;
+            font-family: 'Itim', cursive;
+        }
+        
+        .credits p {
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+        
+        /* Privacy Policy */
+        .privacy-policy {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+            text-align: left;
+        }
+        
+        .privacy-policy h2 {
+            color: #ff6b6b;
+            margin-bottom: 20px;
+            font-family: 'Itim', cursive;
+            text-align: center;
+        }
+        
+        .privacy-policy h3 {
+            color: #7e57c2;
+            margin: 15px 0 10px;
+        }
+        
+        .privacy-policy p {
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+        
+        /* Champion celebration */
+        .champion-celebration {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            display: none;
+        }
+        
+        .champion-content {
+            background: linear-gradient(135deg, #ffd166, #06d6a0);
+            border-radius: 25px;
+            padding: 50px;
+            text-align: center;
+            max-width: 800px;
+            width: 90%;
+            box-shadow: 0 0 50px rgba(255, 209, 102, 0.7);
+            border: 5px solid #ff9e00;
+            animation: championPulse 2s infinite alternate;
+        }
+        
+        @keyframes championPulse {
+            0% { transform: scale(1); box-shadow: 0 0 50px rgba(255, 209, 102, 0.7); }
+            100% { transform: scale(1.05); box-shadow: 0 0 70px rgba(255, 209, 102, 1); }
+        }
+        
+        .champion-content h2 {
+            font-size: 4rem;
+            color: #d62828;
+            margin-bottom: 30px;
+            font-family: 'Itim', cursive;
+            text-shadow: 3px 3px 0 rgba(0, 0, 0, 0.2);
+        }
+        
+        .champion-content p {
+            font-size: 3rem;
+            margin-bottom: 40px;
+            color: #073b4c;
+            font-family: 'Itim', cursive;
+            font-weight: bold;
+        }
+        
+        .trophy-icon {
+            font-size: 8rem;
+            color: gold;
+            margin-bottom: 30px;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+        }
+        
+        /* Win animation */
+        .win-animation {
+            animation: winPulse 0.5s ease;
+        }
+        
+        @keyframes winPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        /* Music control button */
+        .music-control {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50px;
+            padding: 12px 24px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid rgba(126, 87, 194, 0.3);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            font-family: 'Comic Neue', cursive;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #7e57c2;
+        }
+
+        .music-control:hover {
+            background: rgba(255, 255, 255, 1);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+
+        .music-control.playing {
+            background: rgba(255, 193, 7, 0.9);
+            color: #5d4037;
+        }
+
+        body.dark-theme .music-control {
+            background: rgba(50, 50, 80, 0.9);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            color: #ffd166;
+        }
+
+        body.dark-theme .music-control.playing {
+            background: rgba(255, 193, 7, 0.9);
+            color: #5d4037;
+        }
+        
+        /* Countdown */
+        .countdown-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1500;
+            display: none;
+        }
+        
+        .countdown-number {
+            font-size: 15rem;
+            color: #ffd166;
+            font-family: 'Itim', cursive;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+            animation: countdownPulse 1s infinite;
+        }
+        
+        @keyframes countdownPulse {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(1.3); opacity: 0; }
+        }
+        
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .splash-title { font-size: 3.5rem; }
+            .splash-subtitle { font-size: 2rem; }
+            h1 { font-size: 2.8rem; }
+            .creator-text { font-size: 1.8rem; }
+            .choices { gap: 20px; }
+            .choice { width: 130px; height: 130px; font-size: 5rem; }
+            .selections { gap: 30px; }
+            .result-text { font-size: 2.5rem; }
+            .mode-buttons { flex-direction: column; gap: 20px; }
+            .mode-btn { min-width: auto; padding: 16px 30px; font-size: 1.3rem; }
+            .score-box { min-width: 160px; padding: 20px; }
+            .score-value { font-size: 2.8rem; }
+            .splash-logo { font-size: 6rem; }
+            .champion-content h2 { font-size: 3rem; }
+            .champion-content p { font-size: 2.5rem; }
+            .trophy-icon { font-size: 6rem; }
+            .music-control {
+                padding: 10px 20px;
+                font-size: 1rem;
+                top: 15px;
+                right: 15px;
+            }
+            .countdown-number {
+                font-size: 10rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .splash-title { font-size: 2.8rem; }
+            .splash-subtitle { font-size: 1.5rem; }
+            .container { padding: 15px; }
+            h1 { font-size: 2.2rem; }
+            .creator-text { font-size: 1.5rem; }
+            .scores { gap: 20px; }
+            .score-box { padding: 15px; min-width: 140px; }
+            .choices { gap: 15px; }
+            .choice { width: 100px; height: 100px; font-size: 4rem; }
+            .selections { gap: 20px; }
+            .selection-box { width: 120px; }
+            .selection-icon { width: 90px; height: 90px; font-size: 3.5rem; }
+            .result-text { font-size: 2rem; }
+            .mode-btn { min-width: 250px; }
+            .splash-logo { font-size: 5rem; }
+            .champion-content { padding: 30px; }
+            .champion-content h2 { font-size: 2.5rem; }
+            .champion-content p { font-size: 2rem; }
+            .trophy-icon { font-size: 5rem; }
+            .settings { gap: 10px; }
+            .setting-btn { padding: 8px 15px; font-size: 0.9rem; }
+            .music-control {
+                padding: 8px 16px;
+                font-size: 0.9rem;
+                top: 10px;
+                right: 10px;
+            }
+            .countdown-number {
+                font-size: 8rem;
+            }
+        }
+
+        @media (max-height: 700px) {
+            .splash-logo { font-size: 5rem; margin: 15px 0; }
+            .splash-title { font-size: 3rem; }
+            .splash-subtitle { font-size: 1.8rem; }
+            .ghibli-art { font-size: 2.5rem; margin: 15px 0; }
+            .mode-selection { margin: 20px 0; padding: 15px; }
+            .mode-title { font-size: 1.8rem; }
+            .mode-btn { padding: 14px 30px; font-size: 1.2rem; }
+            .countdown-number {
+                font-size: 8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating Ghibli elements -->
+    <div class="ghibli-element cloud" style="top: 10%; left: 5%;"></div>
+    <div class="ghibli-element cloud" style="top: 15%; left: 80%;"></div>
+    <div class="ghibli-element cloud" style="top: 75%; left: 10%;"></div>
+    <div class="ghibli-element cloud" style="top: 80%; left: 75%;"></div>
+    
+    <div class="ghibli-element totoro" style="top: 70%; left: 85%;"></div>
+    
+    <div class="ghibli-element soot-sprite" style="top: 20%; left: 15%;"></div>
+    <div class="ghibli-element soot-sprite" style="top: 40%; left: 90%;"></div>
+    <div class="ghibli-element soot-sprite" style="top: 65%; left: 20%;"></div>
+    
+    <!-- Music control button -->
+    <button class="music-control" id="music-control">
+        🔊 <span id="music-text">Play Music</span>
+    </button>
+    
+    <!-- Turn indicator -->
+    <div class="turn-indicator" id="turn-indicator">Player 1's Turn</div>
+    
+    <!-- Countdown overlay -->
+    <div class="countdown-overlay" id="countdown-overlay">
+        <div class="countdown-number" id="countdown-number">3</div>
+    </div>
+    
+    <!-- Round Winner Screen -->
+    <div class="round-winner" id="round-winner">
+        <div class="round-winner-content">
+            <h2 id="round-winner-title">Round Winner!</h2>
+            <p id="round-winner-text">Player 1 wins Round 1!</p>
+            <button class="btn" id="next-round-btn">Continue to Next Round</button>
+        </div>
+    </div>
+    
+    <!-- Champion Celebration Screen -->
+    <div class="champion-celebration" id="champion-celebration">
+        <div class="champion-content">
+            <div class="trophy-icon">
+                <i class="fas fa-trophy"></i>
+            </div>
+            <h2 id="champion-title">Champion!</h2>
+            <p id="champion-name">Player 1</p>
+            <button class="btn" id="champion-back-btn">Back to Menu</button>
+        </div>
+    </div>
+    
+    <div class="container">
+        <!-- Splash Screen -->
+        <div id="splash-screen" class="screen">
+            <div class="splash-content">
+                <div class="splash-logo">
+                    <i class="fas fa-hand-scissors"></i>
+                </div>
+                <h1 class="splash-title">Ghibli RPS Championship</h1>
+                <div class="splash-subtitle">Ultimate Sound Edition</div>
+            </div>
+        </div>
+        
+        <!-- Welcome Screen -->
+        <div id="welcome-screen" class="screen">
+            <div class="header">
+                <h1>Rock Paper Scissors</h1>
+                <div class="creator-text">Created by Krish</div>
+                <div class="welcome-text" id="welcome-text">Welcome to a magical Ghibli-inspired championship! Experience 3 exciting rounds with 6 games each in this beautiful Rock-Paper-Scissors tournament.</div>
+                <div class="ghibli-art">
+                    <i class="fas fa-cloud"></i>
+                    <i class="fas fa-tree"></i>
+                    <i class="fas fa-dragon"></i>
+                </div>
+            </div>
+            
+            <div class="settings">
+                <button class="setting-btn" id="lang-en">English</button>
+                <button class="setting-btn" id="lang-hi">हिंदी (Hindi)</button>
+                <button class="setting-btn" id="sound-toggle">🔊 Sound On</button>
+                <button class="setting-btn" id="theme-toggle">🌙 Dark Theme</button>
+            </div>
+            
+            <div class="mode-selection">
+                <div class="mode-title" id="mode-title">Choose Your Adventure</div>
+                <div class="mode-buttons">
+                    <button class="mode-btn" id="pvc-btn">
+                        <i class="fas fa-robot"></i> <span id="pvc-text">PLAY VS COMPUTER</span>
+                    </button>
+                    <button class="mode-btn" id="pvp-btn">
+                        <i class="fas fa-users"></i> <span id="pvp-text">PLAY WITH FRIEND</span>
+                    </button>
+                    <button class="mode-btn" id="tutorial-btn">
+                        <i class="fas fa-book"></i> <span id="tutorial-text">HOW TO PLAY</span>
+                    </button>
+                    <button class="mode-btn" id="credits-btn">
+                        <i class="fas fa-star"></i> <span id="credits-text">CREDITS</span>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="footer">
+                <button class="btn" id="privacy-btn">Privacy Policy</button>
+            </div>
+        </div>
+        
+        <!-- Player Input Screen -->
+        <div id="player-input-screen" class="screen">
+            <div class="header">
+                <h1 id="player-input-title">Player Setup</h1>
+                <div class="creator-text" id="player-input-subtitle">Enter Player Details</div>
+            </div>
+            
+            <div class="player-input">
+                <div class="input-group" id="player1-input">
+                    <label for="player1-name" id="player1-label">PLAYER 1 NAME</label>
+                    <input type="text" id="player1-name" placeholder="Enter your name">
+                </div>
+                <div class="input-group" id="player2-input" style="display: none;">
+                    <label for="player2-name" id="player2-label">PLAYER 2 NAME</label>
+                    <input type="text" id="player2-name" placeholder="Enter your name">
+                </div>
+                <button class="btn" id="start-game-btn"><span id="start-btn-text">BEGIN CHAMPIONSHIP</span></button>
+            </div>
+        </div>
+        
+        <!-- Game Screen -->
+        <div id="game-screen" class="screen">
+            <div class="championship-info">
+                <div class="info-box">
+                    <h3 id="round-title">CURRENT ROUND</h3>
+                    <div id="round-value" class="info-value">1/3</div>
+                </div>
+                <div class="info-box">
+                    <h3 id="game-title">CURRENT GAME</h3>
+                    <div id="game-value" class="info-value">1/6</div>
+                </div>
+                <div class="info-box">
+                    <h3 id="score-title">ROUND SCORE</h3>
+                    <div id="round-score" class="info-value">0-0</div>
+                </div>
+            </div>
+            
+            <div class="player-names">
+                <div class="player-name" id="player1-name-display">Player 1</div>
+                <div class="player-name" id="player2-name-display">Computer</div>
+            </div>
+            
+            <div class="scores">
+                <div class="score-box">
+                    <h3 id="score1-title">SCORE</h3>
+                    <div id="player1-score" class="score-value">0</div>
+                </div>
+                <div class="score-box">
+                    <h3 id="score2-title">SCORE</h3>
+                    <div id="player2-score" class="score-value">0</div>
+                </div>
+            </div>
+            
+            <div class="choices">
+                <div class="choice rock" data-choice="rock">
+                    <i class="fa-solid fa-hand-fist"></i>
+                </div>
+                <div class="choice paper" data-choice="paper">
+                    <i class="fa-solid fa-hand"></i>
+                </div>
+                <div class="choice scissors" data-choice="scissors">
+                    <i class="fa-solid fa-hand-scissors"></i>
+                </div>
+            </div>
+            
+            <div class="result-area">
+                <div class="selections">
+                    <div class="selection-box player1-selection">
+                        <h3 id="choice1-title">PLAYER 1</h3>
+                        <div id="player1-choice" class="selection-icon">
+                            <i class="fa-solid fa-user-secret"></i>
+                        </div>
+                    </div>
+                    <div class="selection-box player2-selection">
+                        <h3 id="choice2-title">COMPUTER</h3>
+                        <div id="player2-choice" class="selection-icon">
+                            <i class="fa-solid fa-question"></i>
+                        </div>
+                    </div>
+                </div>
+                <div id="result" class="result-text">Choose your weapon!</div>
+            </div>
+            
+            <div class="controls">
+                <button class="btn" id="game-reset-btn"><span id="reset-btn-text">PLAY AGAIN</span></button>
+                <button class="btn" id="game-back-btn"><span id="menu-btn-text">MAIN MENU</span></button>
+            </div>
+            
+            <div class="footer">
+                Ghibli Magic • Created by Krish • Ultimate Sound System
+            </div>
+        </div>
+        
+        <!-- Tutorial Screen -->
+        <div id="tutorial-screen" class="screen">
+            <div class="header">
+                <h1 id="tutorial-header">How to Play</h1>
+            </div>
+            
+            <div class="credits">
+                <h2 id="tutorial-title">Rock Paper Scissors Rules</h2>
+                <p id="tutorial-text1">Rock Paper Scissors is a simple hand game played between two players. Each player simultaneously forms one of three shapes with an outstretched hand.</p>
+                
+                <h3 id="rules-title">The Rules:</h3>
+                <p id="rule1">✊ Rock crushes ✂️ Scissors</p>
+                <p id="rule2">✋ Paper covers ✊ Rock</p>
+                <p id="rule3">✂️ Scissors cuts ✋ Paper</p>
+                
+                <p id="tutorial-text2">In this championship, you'll play 3 rounds with 6 games each in each round. The player with the highest score at the end of each round wins that round. The ultimate champion is determined after all 3 rounds!</p>
+                
+                <button class="btn" id="tutorial-back-btn">Back to Menu</button>
+            </div>
+        </div>
+        
+        <!-- Credits Screen -->
+        <div id="credits-screen" class="screen">
+            <div class="header">
+                <h1 id="credits-header">Credits</h1>
+            </div>
+            
+            <div class="credits">
+                <h2>Ghibli RPS Championship</h2>
+                <p>Created by Krish</p>
+                
+                <h3 id="special-thanks">Special Thanks:</h3>
+                <p>Inspired by the magical worlds of Studio Ghibli</p>
+                <p>Fonts by Google Fonts</p>
+                <p>Icons by Font Awesome</p>
+                <p>Sound effects by Zapsplat</p>
+                
+                <h3 id="disclaimer">Disclaimer:</h3>
+                <p>This game is a fan creation and is not affiliated with Studio Ghibli. All Ghibli-inspired elements are original creations.</p>
+                
+                <button class="btn" id="credits-back-btn">Back to Menu</button>
+            </div>
+        </div>
+        
+        <!-- Privacy Policy Screen -->
+        <div id="privacy-screen" class="screen">
+            <div class="header">
+                <h1>Privacy Policy</h1>
+            </div>
+            
+            <div class="privacy-policy">
+                <h2>Privacy Policy for Ghibli RPS Championship</h2>
+                
+                <h3>Introduction</h3>
+                <p>This privacy policy explains how we handle your information in the Ghibli RPS Championship game. We are committed to protecting your privacy and ensuring a safe gaming experience.</p>
+                
+                <h3>Information We Collect</h3>
+                <p>We do not collect any personal information from players. The game operates entirely within your browser and does not transmit any data to external servers.</p>
+                
+                <h3>Game Data</h3>
+                <p>All game progress and scores are stored locally on your device. This data is not shared with anyone and is deleted when you clear your browser cache.</p>
+                
+                <h3>Cookies</h3>
+                <p>This game does not use cookies or any tracking technologies.</p>
+                
+                <h3>Children's Privacy</h3>
+                <p>Our game is suitable for players of all ages. We do not knowingly collect any personal information from children under 13.</p>
+                
+                <h3>Changes to This Policy</h3>
+                <p>We may update this privacy policy from time to time. Any changes will be reflected on this page.</p>
+                
+                <button class="btn" id="privacy-back-btn">Back to Menu</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Audio Elements -->
+    <audio id="bgMusic" loop preload="auto">
+        <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+LwlU0GCjt+wPBeJAQrDc7zvmEYBE+oUUlRSUlRSUlRSUlJSUlJSUlJSUlJSUl..." type="audio/wav">
+    </audio>
+    
+    <!-- Sound effect sources (Data URIs for instant loading) -->
+    <audio id="clickSound" preload="auto">
+        <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+Lw..." type="audio/wav">
+    </audio>
+
+    <audio id="hoverSound" preload="auto">
+        <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+Lw..." type="audio/wav">
+    </audio>
+
+    <audio id="winSound" preload="auto">
+        <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+Lw..." type="audio/wav">
+    </audio>
+
+    <audio id="loseSound" preload="auto">
+        <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+Lw..." type="audio/wav">
+    </audio>
+
+    <audio id="countdownSound" preload="auto">
+        <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+Lw..." type="audio/wav">
+    </audio>
+
+    <audio id="victorySound" preload="auto">
+        <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+Lw..." type="audio/wav">
+    </audio>
+
+    <script>
+        // Game State and Audio Management
+        class GhibliRPSGame {
+            constructor() {
+                this.initializeGameState();
+                this.initializeAudioSystem();
+                this.bindElements();
+                this.setupEventListeners();
+                this.initializeLanguage();
+                this.startSplashScreen();
+            }
+
+            initializeGameState() {
+                this.gameMode = null;
+                this.player1Name = 'Player 1';
+                this.player2Name = 'Computer';
+                this.player1Score = 0;
+                this.player2Score = 0;
+                this.player1RoundScore = 0;
+                this.player2RoundScore = 0;
+                this.player1Choice = null;
+                this.player2Choice = null;
+                this.currentRound = 1;
+                this.currentGame = 1;
+                this.gameOver = false;
+                this.currentPlayer = 1;
+                this.currentLanguage = 'en';
+                this.soundEnabled = true;
+                this.darkTheme = false;
+                this.musicPlaying = false;
+                this.audioReady = false;
+            }
+
+            initializeAudioSystem() {
+                // Audio context for better browser compatibility
+                this.audioContext = null;
+                this.masterGain = null;
+                this.sounds = {};
+                
+                // Initialize audio on first user interaction
+                this.initAudioOnFirstInteraction();
+                
+                // Preload all audio elements
+                this.preloadAudio();
+            }
+
+            initAudioOnFirstInteraction() {
+                const enableAudio = () => {
+                    if (!this.audioContext) {
+                        try {
+                            this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                            this.masterGain = this.audioContext.createGain();
+                            this.masterGain.connect(this.audioContext.destination);
+                            this.masterGain.gain.value = 1;
+                            this.audioReady = true;
+                            console.log('Audio system initialized successfully');
+                        } catch (error) {
+                            console.warn('Audio context initialization failed:', error);
+                        }
+                    }
+                    
+                    // Resume audio context if suspended
+                    if (this.audioContext && this.audioContext.state === 'suspended') {
+                        this.audioContext.resume();
+                    }
+                    
+                    // Remove listener after first interaction
+                    document.removeEventListener('click', enableAudio);
+                    document.removeEventListener('touchstart', enableAudio);
+                    document.removeEventListener('keydown', enableAudio);
+                };
+
+                document.addEventListener('click', enableAudio, { once: true });
+                document.addEventListener('touchstart', enableAudio, { once: true });
+                document.addEventListener('keydown', enableAudio, { once: true });
+            }
+
+            preloadAudio() {
+                const audioIds = ['bgMusic', 'clickSound', 'hoverSound', 'winSound', 'loseSound', 'countdownSound', 'victorySound'];
+                
+                audioIds.forEach(id => {
+                    const audio = document.getElementById(id);
+                    if (audio) {
+                        // Set volume and prepare for playback
+                        audio.volume = 0.7;
+                        audio.load();
+                        
+                        // Handle audio loading events
+                        audio.addEventListener('canplaythrough', () => {
+                            console.log(`Audio ${id} loaded successfully`);
+                        });
+                        
+                        audio.addEventListener('error', (e) => {
+                            console.warn(`Audio ${id} failed to load:`, e);
+                        });
+                        
+                        this.sounds[id] = audio;
+                    }
+                });
+            }
+
+            playSound(soundId, volume = 1) {
+                if (!this.soundEnabled || !this.sounds[soundId]) return;
+                
+                try {
+                    const sound = this.sounds[soundId];
+                    sound.currentTime = 0;
+                    sound.volume = Math.min(volume, 1);
+                    
+                    const playPromise = sound.play();
+                    if (playPromise !== undefined) {
+                        playPromise.catch(error => {
+                            console.log(`Playback prevented for ${soundId}:`, error);
+                        });
+                    }
+                } catch (error) {
+                    console.warn(`Error playing sound ${soundId}:`, error);
+                }
+            }
+
+            bindElements() {
+                // Screens
+                this.screens = {
+                    splash: document.getElementById('splash-screen'),
+                    welcome: document.getElementById('welcome-screen'),
+                    playerInput: document.getElementById('player-input-screen'),
+                    game: document.getElementById('game-screen'),
+                    tutorial: document.getElementById('tutorial-screen'),
+                    credits: document.getElementById('credits-screen'),
+                    privacy: document.getElementById('privacy-screen')
+                };
+
+                // Overlays
+                this.overlays = {
+                    roundWinner: document.getElementById('round-winner'),
+                    champion: document.getElementById('champion-celebration'),
+                    countdown: document.getElementById('countdown-overlay')
+                };
+
+                // Controls
+                this.controls = {
+                    pvcBtn: document.getElementById('pvc-btn'),
+                    pvpBtn: document.getElementById('pvp-btn'),
+                    tutorialBtn: document.getElementById('tutorial-btn'),
+                    creditsBtn: document.getElementById('credits-btn'),
+                    privacyBtn: document.getElementById('privacy-btn'),
+                    startGameBtn: document.getElementById('start-game-btn'),
+                    resetBtn: document.getElementById('game-reset-btn'),
+                    backBtn: document.getElementById('game-back-btn'),
+                    nextRoundBtn: document.getElementById('next-round-btn'),
+                    championBackBtn: document.getElementById('champion-back-btn'),
+                    musicControl: document.getElementById('music-control'),
+                    soundToggle: document.getElementById('sound-toggle'),
+                    themeToggle: document.getElementById('theme-toggle'),
+                    langEn: document.getElementById('lang-en'),
+                    langHi: document.getElementById('lang-hi')
+                };
+
+                // Game elements
+                this.gameElements = {
+                    player1NameInput: document.getElementById('player1-name'),
+                    player2NameInput: document.getElementById('player2-name'),
+                    player1NameDisplay: document.getElementById('player1-name-display'),
+                    player2NameDisplay: document.getElementById('player2-name-display'),
+                    player1Score: document.getElementById('player1-score'),
+                    player2Score: document.getElementById('player2-score'),
+                    roundScore: document.getElementById('round-score'),
+                    roundValue: document.getElementById('round-value'),
+                    gameValue: document.getElementById('game-value'),
+                    player1Choice: document.getElementById('player1-choice'),
+                    player2Choice: document.getElementById('player2-choice'),
+                    result: document.getElementById('result'),
+                    turnIndicator: document.getElementById('turn-indicator'),
+                    countdownNumber: document.getElementById('countdown-number'),
+                    choices: document.querySelectorAll('.choice')
+                };
+
+                // Text elements for language switching
+                this.textElements = {
+                    welcomeText: document.getElementById('welcome-text'),
+                    modeTitle: document.getElementById('mode-title'),
+                    musicText: document.getElementById('music-text')
+                };
+            }
+
+            setupEventListeners() {
+                // Navigation buttons
+                this.controls.pvcBtn.addEventListener('click', () => this.selectGameMode('pvc'));
+                this.controls.pvpBtn.addEventListener('click', () => this.selectGameMode('pvp'));
+                this.controls.tutorialBtn.addEventListener('click', () => this.showScreen('tutorial'));
+                this.controls.creditsBtn.addEventListener('click', () => this.showScreen('credits'));
+                this.controls.privacyBtn.addEventListener('click', () => this.showScreen('privacy'));
+                this.controls.startGameBtn.addEventListener('click', () => this.startGame());
+                this.controls.resetBtn.addEventListener('click', () => this.resetGame());
+                this.controls.backBtn.addEventListener('click', () => this.goToWelcome());
+                this.controls.nextRoundBtn.addEventListener('click', () => this.nextRound());
+                this.controls.championBackBtn.addEventListener('click', () => this.goToWelcome());
+
+                // Back buttons for different screens
+                document.getElementById('tutorial-back-btn').addEventListener('click', () => this.showScreen('welcome'));
+                document.getElementById('credits-back-btn').addEventListener('click', () => this.showScreen('welcome'));
+                document.getElementById('privacy-back-btn').addEventListener('click', () => this.showScreen('welcome'));
+
+                // Settings
+                this.controls.langEn.addEventListener('click', () => this.setLanguage('en'));
+                this.controls.langHi.addEventListener('click', () => this.setLanguage('hi'));
+                this.controls.soundToggle.addEventListener('click', () => this.toggleSound());
+                this.controls.themeToggle.addEventListener('click', () => this.toggleTheme());
+                this.controls.musicControl.addEventListener('click', () => this.toggleMusic());
+
+                // Game choices
+                this.gameElements.choices.forEach(choice => {
+                    choice.addEventListener('click', (e) => this.makeChoice(e.target.closest('.choice').dataset.choice));
+                    choice.addEventListener('mouseenter', () => this.playSound('hoverSound', 0.3));
+                });
+
+                // Add hover sounds to all buttons
+                document.querySelectorAll('button, .mode-btn, .setting-btn').forEach(btn => {
+                    btn.addEventListener('mouseenter', () => this.playSound('hoverSound', 0.3));
+                });
+            }
+
+            initializeLanguage() {
+                this.languages = {
+                    en: {
+                        welcome: "Welcome to a magical Ghibli-inspired championship! Experience 3 exciting rounds with 6 games each in this beautiful Rock-Paper-Scissors tournament.",
+                        modeTitle: "Choose Your Adventure",
+                        pvc: "PLAY VS COMPUTER",
+                        pvp: "PLAY WITH FRIEND",
+                        tutorial: "HOW TO PLAY",
+                        credits: "CREDITS",
+                        playerSetup: "Player Setup",
+                        enterDetails: "Enter Player Details",
+                        player1: "PLAYER 1 NAME",
+                        player2: "PLAYER 2 NAME",
+                        start: "BEGIN CHAMPIONSHIP",
+                        round: "CURRENT ROUND",
+                        game: "CURRENT GAME",
+                        score: "ROUND SCORE",
+                        reset: "PLAY AGAIN",
+                        menu: "MAIN MENU",
+                        turn: "'s Turn",
+                        choose: "Choose your weapon!",
+                        roundWin: "wins Round",
+                        tutorialTitle: "How to Play",
+                        soundOn: "🔊 Sound On",
+                        soundOff: "🔇 Sound Off",
+                        musicPlay: "Play Music",
+                        musicPause: "Pause Music",
+                        wins: "Wins!",
+                        draw: "It's a Draw!",
+                        champion: "Champion!",
+                        tie: "It's a Tie!"
+                    },
+                    hi: {
+                        welcome: "घिबली-प्रेरित चैंपियनशिप में आपका स्वागत है! इस सुंदर रॉक-पेपर-कैंची टूर्नामेंट में 6 गेम के 3 रोमांचक राउंड का अनुभव करें।",
+                        modeTitle: "अपना साहसिक कार्य चुनें",
+                        pvc: "कंप्यूटर के खिलाफ खेलें",
+                        pvp: "दोस्त के साथ खेलें",
+                        tutorial: "कैसे खेलें",
+                        credits: "क्रेडिट्स",
+                        playerSetup: "खिलाड़ी सेटअप",
+                        enterDetails: "खिलाड़ी विवरण दर्ज करें",
+                        player1: "खिलाड़ी 1 का नाम",
+                        player2: "खिलाड़ी 2 का नाम",
+                        start: "चैंपियनशिप शुरू करें",
+                        round: "वर्तमान राउंड",
+                        game: "वर्तमान खेल",
+                        score: "राउंड स्कोर",
+                        reset: "फिर से खेलें",
+                        menu: "मुख्य मेनू",
+                        turn: "की बारी",
+                        choose: "अपना हथियार चुनें!",
+                        roundWin: "राउंड जीता",
+                        tutorialTitle: "कैसे खेलें",
+                        soundOn: "🔊 ध्वनि चालू",
+                        soundOff: "🔇 ध्वनि बंद",
+                        musicPlay: "संगीत चालू करें",
+                        musicPause: "संगीत रोकें",
+                        wins: "जीत गया!",
+                        draw: "बराबरी हो गई!",
+                        champion: "विजेता!",
+                        tie: "बराबरी हो गई!"
+                    }
+                };
+                this.updateLanguage();
+            }
+
+            startSplashScreen() {
+                this.playSound('victorySound', 0.5);
+                setTimeout(() => {
+                    this.showScreen('welcome');
+                }, 3000);
+            }
+
+            showScreen(screenName) {
+                // Hide all screens
+                Object.values(this.screens).forEach(screen => screen.style.display = 'none');
+                Object.values(this.overlays).forEach(overlay => overlay.style.display = 'none');
+                
+                // Show target screen
+                if (this.screens[screenName]) {
+                    this.screens[screenName].style.display = 'block';
+                }
+                
+                this.playSound('clickSound', 0.6);
+            }
+
+            selectGameMode(mode) {
+                this.gameMode = mode;
+                this.playSound('clickSound');
+                
+                if (mode === 'pvp') {
+                    document.getElementById('player2-input').style.display = 'block';
+                } else {
+                    document.getElementById('player2-input').style.display = 'none';
+                }
+                
+                this.showScreen('playerInput');
+            }
+
+            startGame() {
+                // Get player names
+                this.player1Name = this.gameElements.player1NameInput.value || 
+                    (this.currentLanguage === 'en' ? 'Player 1' : 'खिलाड़ी 1');
+                
+                this.player2Name = this.gameMode === 'pvp' ? 
+                    (this.gameElements.player2NameInput.value || (this.currentLanguage === 'en' ? 'Player 2' : 'खिलाड़ी 2')) : 
+                    (this.currentLanguage === 'en' ? 'Computer' : 'कंप्यूटर');
+
+                // Update displays
+                this.gameElements.player1NameDisplay.textContent = this.player1Name;
+                this.gameElements.player2NameDisplay.textContent = this.player2Name;
+                document.getElementById('choice1-title').textContent = this.player1Name;
+                document.getElementById('choice2-title').textContent = this.player2Name;
+
+                this.startCountdown();
+            }
+
+            startCountdown() {
+                this.overlays.countdown.style.display = 'flex';
+                let count = 3;
+                this.gameElements.countdownNumber.textContent = count;
+                this.playSound('countdownSound');
+
+                const countdownInterval = setInterval(() => {
+                    count--;
+                    
+                    if (count > 0) {
+                        this.playSound('countdownSound');
+                        this.gameElements.countdownNumber.textContent = count;
+                    } else if (count === 0) {
+                        this.playSound('victorySound', 0.8);
+                        this.gameElements.countdownNumber.textContent = "GO!";
+                    } else {
+                        clearInterval(countdownInterval);
+                        this.overlays.countdown.style.display = 'none';
+                        this.showScreen('game');
+                        this.updateGameDisplay();
+                        
+                        if (this.gameMode === 'pvp') {
+                            this.showTurnIndicator(`${this.player1Name}${this.languages[this.currentLanguage].turn}`);
+                        }
+                    }
+                }, 1000);
+            }
+
+            makeChoice(choice) {
+                if (this.gameOver) return;
+                
+                this.playSound('clickSound');
+                
+                // Haptic feedback for mobile
+                if (navigator.vibrate) {
+                    navigator.vibrate(50);
+                }
+
+                if (this.gameMode === 'pvc') {
+                    this.player1Choice = choice;
+                    const computerChoice = this.getComputerChoice();
+                    this.playRound(this.player1Choice, computerChoice);
+                } else {
+                    if (this.currentPlayer === 1) {
+                        this.player1Choice = choice;
+                        this.gameElements.player1Choice.innerHTML = '<i class="fa-solid fa-user-secret"></i>';
+                        this.currentPlayer = 2;
+                        this.showTurnIndicator(`${this.player2Name}${this.languages[this.currentLanguage].turn}`);
+                    } else {
+                        this.player2Choice = choice;
+                        this.playRound(this.player1Choice, this.player2Choice);
+                        this.currentPlayer = 1;
+                    }
+                }
+            }
+
+            getComputerChoice() {
+                const choices = ['rock', 'paper', 'scissors'];
+                return choices[Math.floor(Math.random() * 3)];
+            }
+
+            playRound(player1Choice, player2Choice) {
+                this.updateChoiceDisplays(player1Choice, player2Choice);
+                
+                setTimeout(() => {
+                    const winner = this.determineWinner(player1Choice, player2Choice);
+                    this.processRoundResult(winner);
+                    this.advanceGame();
+                }, 800);
+            }
+
+            updateChoiceDisplays(player1Choice, player2Choice) {
+                const choiceIcons = {
+                    rock: '<i class="fa-solid fa-hand-fist"></i>',
+                    paper: '<i class="fa-solid fa-hand"></i>',
+                    scissors: '<i class="fa-solid fa-hand-scissors"></i>'
+                };
+
+                setTimeout(() => {
+                    this.gameElements.player1Choice.innerHTML = choiceIcons[player1Choice];
+                    this.gameElements.player2Choice.innerHTML = choiceIcons[player2Choice];
+                    this.playSound('clickSound', 0.5);
+                }, 300);
+            }
+
+            determineWinner(player1Choice, player2Choice) {
+                if (player1Choice === player2Choice) return 'draw';
+                
+                const winConditions = {
+                    rock: 'scissors',
+                    paper: 'rock',
+                    scissors: 'paper'
+                };
+                
+                return winConditions[player1Choice] === player2Choice ? 'player1' : 'player2';
+            }
+
+            processRoundResult(winner) {
+                let resultText = '';
+                
+                if (winner === 'player1') {
+                    this.player1Score++;
+                    this.player1RoundScore++;
+                    this.gameElements.player1Score.classList.add('win-animation');
+                    this.playSound('winSound');
+                    resultText = `${this.player1Name} ${this.languages[this.currentLanguage].wins}`;
+                } else if (winner === 'player2') {
+                    this.player2Score++;
+                    this.player2RoundScore++;
+                    this.gameElements.player2Score.classList.add('win-animation');
+                    this.playSound('loseSound');
+                    resultText = `${this.player2Name} ${this.languages[this.currentLanguage].wins}`;
+                } else {
+                    this.playSound('clickSound');
+                    resultText = this.languages[this.currentLanguage].draw;
+                }
+                
+                this.gameElements.result.textContent = resultText;
+                this.updateScores();
+                
+                // Remove animation
+                setTimeout(() => {
+                    this.gameElements.player1Score.classList.remove('win-animation');
+                    this.gameElements.player2Score.classList.remove('win-animation');
+                }, 500);
+            }
+
+            updateScores() {
+                this.gameElements.player1Score.textContent = this.player1Score;
+                this.gameElements.player2Score.textContent = this.player2Score;
+                this.gameElements.roundScore.textContent = `${this.player1RoundScore}-${this.player2RoundScore}`;
+            }
+
+            advanceGame() {
+                this.currentGame++;
+                
+                if (this.currentGame > 6) {
+                    this.endRound();
+                } else {
+                    this.updateGameDisplay();
+                    setTimeout(() => {
+                        this.resetChoices();
+                        if (this.gameMode === 'pvp') {
+                            this.showTurnIndicator(`${this.player1Name}${this.languages[this.currentLanguage].turn}`);
+                        }
+                    }, 1500);
+                }
+            }
+
+            endRound() {
+                let roundWinnerText = '';
+                
+                if (this.player1RoundScore > this.player2RoundScore) {
+                    roundWinnerText = `${this.player1Name} ${this.languages[this.currentLanguage].roundWin} ${this.currentRound}!`;
+                } else if (this.player2RoundScore > this.player1RoundScore) {
+                    roundWinnerText = `${this.player2Name} ${this.languages[this.currentLanguage].roundWin} ${this.currentRound}!`;
+                } else {
+                    roundWinnerText = `Round ${this.currentRound} ended in a tie!`;
+                }
+                
+                document.getElementById('round-winner-title').textContent = 
+                    this.currentLanguage === 'en' ? "Round Winner!" : "राउंड विजेता!";
+                document.getElementById('round-winner-text').textContent = roundWinnerText;
+                
+                this.overlays.roundWinner.style.display = 'flex';
+                this.playSound('winSound');
+            }
+
+            nextRound() {
+                this.overlays.roundWinner.style.display = 'none';
+                
+                if (this.currentRound < 3) {
+                    this.currentRound++;
+                    this.currentGame = 1;
+                    this.player1RoundScore = 0;
+                    this.player2RoundScore = 0;
+                    this.updateGameDisplay();
+                    this.resetChoices();
+                    
+                    this.playSound('victorySound', 0.7);
+                    
+                    if (this.gameMode === 'pvp') {
+                        this.showTurnIndicator(`${this.player1Name}${this.languages[this.currentLanguage].turn}`);
+                    }
+                } else {
+                    this.showChampion();
+                }
+            }
+
+            showChampion() {
+                let championText = '';
+                
+                if (this.player1Score > this.player2Score) {
+                    championText = this.player1Name;
+                    document.getElementById('champion-title').textContent = this.languages[this.currentLanguage].champion;
+                } else if (this.player2Score > this.player1Score) {
+                    championText = this.player2Name;
+                    document.getElementById('champion-title').textContent = this.languages[this.currentLanguage].champion;
+                } else {
+                    championText = this.languages[this.currentLanguage].tie;
+                    document.getElementById('champion-title').textContent = this.languages[this.currentLanguage].tie;
+                }
+                
+                document.getElementById('champion-name').textContent = championText;
+                this.overlays.champion.style.display = 'flex';
+                this.playSound('victorySound');
+                this.gameOver = true;
+            }
+
+            resetGame() {
+                this.player1Score = 0;
+                this.player2Score = 0;
+                this.player1RoundScore = 0;
+                this.player2RoundScore = 0;
+                this.currentRound = 1;
+                this.currentGame = 1;
+                this.gameOver = false;
+                this.currentPlayer = 1;
+                
+                this.updateScores();
+                this.updateGameDisplay();
+                this.resetChoices();
+                
+                Object.values(this.overlays).forEach(overlay => overlay.style.display = 'none');
+                
+                this.playSound('clickSound');
+            }
+
+            updateGameDisplay() {
+                this.gameElements.roundValue.textContent = `${this.currentRound}/3`;
+                this.gameElements.gameValue.textContent = `${this.currentGame}/6`;
+            }
+
+            resetChoices() {
+                this.gameElements.player1Choice.innerHTML = '<i class="fa-solid fa-user-secret"></i>';
+                this.gameElements.player2Choice.innerHTML = '<i class="fa-solid fa-question"></i>';
+                this.gameElements.result.textContent = this.languages[this.currentLanguage].choose;
+                this.player1Choice = null;
+                this.player2Choice = null;
+            }
+
+            showTurnIndicator(text) {
+                this.gameElements.turnIndicator.textContent = text;
+                this.gameElements.turnIndicator.classList.add('active');
+                this.playSound('clickSound', 0.4);
+                
+                setTimeout(() => {
+                    this.gameElements.turnIndicator.classList.remove('active');
+                }, 2000);
+            }
+
+            goToWelcome() {
+                this.resetGame();
+                this.showScreen('welcome');
+            }
+
+            setLanguage(lang) {
+                this.currentLanguage = lang;
+                this.updateLanguage();
+                this.playSound('clickSound');
+            }
+
+            updateLanguage() {
+                const lang = this.languages[this.currentLanguage];
+                
+                // Update text elements
+                if (this.textElements.welcomeText) this.textElements.welcomeText.textContent = lang.welcome;
+                if (this.textElements.modeTitle) this.textElements.modeTitle.textContent = lang.modeTitle;
+                
+                // Update button texts
+                const elements = {
+                    'pvc-text': lang.pvc,
+                    'pvp-text': lang.pvp,
+                    'tutorial-text': lang.tutorial,
+                    'credits-text': lang.credits,
+                    'player-input-title': lang.playerSetup,
+                    'player-input-subtitle': lang.enterDetails,
+                    'player1-label': lang.player1,
+                    'player2-label': lang.player2,
+                    'start-btn-text': lang.start,
+                    'round-title': lang.round,
+                    'game-title': lang.game,
+                    'score-title': lang.score,
+                    'reset-btn-text': lang.reset,
+                    'menu-btn-text': lang.menu,
+                    'tutorial-header': lang.tutorialTitle,
+                    'tutorial-title': lang.tutorialTitle
+                };
+                
+                Object.entries(elements).forEach(([id, text]) => {
+                    const element = document.getElementById(id);
+                    if (element) element.textContent = text;
+                });
+                
+                // Update result text if game is active
+                if (this.gameElements.result && !this.gameOver) {
+                    this.gameElements.result.textContent = lang.choose;
+                }
+                
+                // Update sound toggle
+                if (this.controls.soundToggle) {
+                    this.controls.soundToggle.textContent = this.soundEnabled ? lang.soundOn : lang.soundOff;
+                }
+                
+                // Update music button
+                if (this.textElements.musicText) {
+                    this.textElements.musicText.textContent = this.musicPlaying ? lang.musicPause : lang.musicPlay;
+                }
+            }
+
+            toggleSound() {
+                this.soundEnabled = !this.soundEnabled;
+                this.playSound('clickSound');
+                
+                const lang = this.languages[this.currentLanguage];
+                this.controls.soundToggle.textContent = this.soundEnabled ? lang.soundOn : lang.soundOff;
+            }
+
+            toggleTheme() {
+                this.darkTheme = !this.darkTheme;
+                document.body.classList.toggle('dark-theme', this.darkTheme);
+                this.controls.themeToggle.textContent = this.darkTheme ? '☀️ Light Theme' : '🌙 Dark Theme';
+                this.playSound('clickSound');
+            }
+
+            toggleMusic() {
+                const bgMusic = this.sounds.bgMusic;
+                if (!bgMusic) return;
+                
+                this.playSound('clickSound');
+                
+                if (this.musicPlaying) {
+                    bgMusic.pause();
+                    this.musicPlaying = false;
+                    this.controls.musicControl.classList.remove('playing');
+                } else {
+                    bgMusic.currentTime = 0;
+                    const playPromise = bgMusic.play();
+                    
+                    if (playPromise !== undefined) {
+                        playPromise.then(() => {
+                            this.musicPlaying = true;
+                            this.controls.musicControl.classList.add('playing');
+                        }).catch(error => {
+                            console.log("Music playback prevented:", error);
+                            alert("Please click the music button again to enable background music. Some browsers require explicit permission.");
+                        });
+                    }
+                }
+                
+                // Update button text
+                const lang = this.languages[this.currentLanguage];
+                this.textElements.musicText.textContent = this.musicPlaying ? lang.musicPause : lang.musicPlay;
+            }
+        }
+
+        // Initialize the game when DOM is ready
+        document.addEventListener('DOMContentLoaded', () => {
+            new GhibliRPSGame();
+        });
+    </script>
+</body>
+</html>
